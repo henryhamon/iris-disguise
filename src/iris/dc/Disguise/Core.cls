@@ -1,41 +1,9 @@
 Class dc.Disguise.Core
 {
 
-/*
-Destruction
-
-Pseudonymization
-pseudo
-
-Faking
-
-Randomization
-random
-
-shuffling
-
-Partial Scrambling
-partial
-
-Content	Name	Description
-Text	LoremIpsum	Generates a random Lorep Ipsum String
-Text	RandomString	Generates a random string of equal length
-Text	StringTemplate	Generates a string based on provided template
-Text	SelectFromList	Randomly selects a string from a provided list
-Text	SelectFromFile	Randomly selects a string from a provided file
-Text	FormattedStringNumber	Randomize digits in a string while maintaining the format
-Text	SelectFromDatabase	Selects randomly from the result of a query on a database
-Text	RandomUrl	Anonymizes a URL while mainting the structure
-Content	Name	Description
-Number	RandomInteger	Generates a random integer between provided limits (default 0 to 100)
-Number	RandomIntegerDelta	Generates a random integer within -delta and delta of original integer
-Number	RandomFloat	Generates a random float between provided limits (default 0.0 to 100.0)
-Number	RandomFloatDelta	Generates a random float within -delta and delta of original float
-Number	RandomBigDecimalDelta	Similar to previous but creates a big decimal object
-*/
-/// Partial Scrambling
+/// Partial Masking
 /// leaves out some part of the data.
-ClassMethod PartialScramble(classname As %String, propName As %String, prefixLength As %Integer = 1, suffixLength As %Integer = 1, mask As %String = "X") As %Status
+ClassMethod PartialMasking(classname As %String, propName As %String, prefixLength As %Integer = 1, suffixLength As %Integer = 1, mask As %String = "X") As %Status
 {
   Set sc = $$$OK
   Try {
@@ -55,7 +23,7 @@ ClassMethod PartialScramble(classname As %String, propName As %String, prefixLen
   Return sc
 }
 
-/// Scramble obfuscator
+/// obfuscator
 /// Write ##class(dc.Disguise.Core).Obfuscating("4567 6365 7987 3783",3,3,"X")
 /// ; 456X XXXX XXXX X783
 /// Write ##class(dc.Disguise.Core).Obfuscating("3457 732837 82372",1,4,"*")
@@ -86,7 +54,7 @@ ClassMethod SQLTableName(classname As %String) As %String [ Private ]
   Return class.SqlQualifiedNameQ
 }
 
-/// Description
+/// Get all data from persistent class
 ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As %Status [ Private ]
 {
   Set sc = $$$OK
