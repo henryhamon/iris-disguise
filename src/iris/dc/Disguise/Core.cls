@@ -1,6 +1,20 @@
 Class dc.Disguise.Core
 {
 
+/// Destruction
+/// Sometimes the fastest and the best approach to anonymize a data is to replace all the values with the word CONFIDENTIAL.
+ClassMethod Destruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    $$$THROWONERROR(sc, ..GetAllData(classname, .results))
+    $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .results))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
 /// Partial Masking
 /// leaves out some part of the data.
 ClassMethod PartialMasking(classname As %String, propName As %String, prefixLength As %Integer = 1, suffixLength As %Integer = 1, mask As %String = "X") As %Status
@@ -42,6 +56,26 @@ ClassMethod Obfuscating(value As %String, prefixLength As %Integer = 1, suffixLe
   Set matcher.Text = replacement
   Set output = $Replace(value, replacement, matcher.ReplaceAll(mask))
   Return output
+}
+
+ClassMethod AbstractDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    If ('values.%Next()) {
+      Return sc
+    }
+    Set obj = $Classmethod(classname, "%OpenId", values.ID)
+    If ('$IsObject(obj)) {
+      $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .values))
+    }
+    Set $Property(obj, propName) = mask
+    $$$THROWONERROR(sc, $Method(obj,"%Save"))
+    $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .values))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
 }
 
 /// Get SQL table name of the class
