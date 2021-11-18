@@ -9,4 +9,16 @@ Method TestObfuscating()
   Do $$$AssertEquals(##class(dc.Disguise.Core).Obfuscating("Lemmy Kilmister",1,4,"##"), "L######## ##########ster")
 }
 
+Method TestPartialMasking() As %Status
+{
+  Do ##class(dc.PackageSample.Musician).Populate()
+  Set musicianID = "1||3"
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertEquals(test.Identifier, "576-56-1090")
+  Kill test
+  Do $$$AssertStatusOK(##class(dc.Disguise.Core).PartialMasking("dc.PackageSample.Musician", "Identifier", 2, 3, "X"))
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertEquals(test.Identifier, "57X-XX-X090")
+}
+
 }

@@ -37,7 +37,16 @@ ClassMethod Create(name As %String = "", band As %String, instrument As %String 
 
 ClassMethod Clear() As %Status
 {
-  Return ..%KillExtent()
+  Set sc = $$$OK
+	Try {
+    $$$THROWONERROR(sc, ..%KillExtent())
+    $$$THROWONERROR(sc, ##Class(dc.PackageSample.Instrument).%KillExtent())
+    $$$THROWONERROR(sc, ##Class(dc.PackageSample.Band).%KillExtent())
+
+	} Catch tException {
+		Set:$$$ISOK(sc) tSC = tException.AsStatus()
+	}
+	Return sc
 }
 
 ClassMethod Populate()
