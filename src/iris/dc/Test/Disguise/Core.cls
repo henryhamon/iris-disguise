@@ -1,4 +1,4 @@
-Class Test.Disguise.Core Extends %UnitTest.TestCase
+Class dc.Test.Disguise.Core Extends %UnitTest.TestCase
 {
 
 Method TestObfuscating()
