@@ -25,4 +25,8 @@ Method TestDestruction() As %Status
   Do $$$AssertEquals(test.Identifier, "CONFIDENTIAL")
 }
 
+Method TestRandomization() As %Status
+{
+}
+
 }

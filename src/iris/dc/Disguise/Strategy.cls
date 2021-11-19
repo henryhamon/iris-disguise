@@ -2,6 +2,19 @@
 Class dc.Disguise.Strategy Extends Core
 {
 
+/// Randomization
+/// Generate purely random data
+ClassMethod Randomization(classname As %String, propName As %String, type As %String = "", from As %String = "", to As %String = "") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    $$$THROWONERROR(sc, ..GetAllData(classname, .results))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
 /// Destruction
 /// Sometimes the fastest and the best approach to anonymize a data is to replace all the values with the word CONFIDENTIAL.
 ClassMethod Destruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL") As %Status
@@ -9,7 +22,7 @@ ClassMethod Destruction(classname As %String, propName As %String, mask As %Stri
   Set sc = $$$OK
   Try {
     $$$THROWONERROR(sc, ..GetAllData(classname, .results))
-    $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .results))
+    $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .results))
   } Catch ex {
     Set sc=ex.AsStatus()
   }
