@@ -22,7 +22,7 @@ ClassMethod Obfuscating(value As %String, prefixLength As %Integer = 1, suffixLe
   Return output
 }
 
-ClassMethod AbstractDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
 {
   Set sc = $$$OK
   Try {
@@ -31,11 +31,11 @@ ClassMethod AbstractDestruction(classname As %String, propName As %String, mask 
     }
     Set obj = $Classmethod(classname, "%OpenId", values.ID)
     If ('$IsObject(obj)) {
-      $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .values))
+      $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .values))
     }
     Set $Property(obj, propName) = mask
     $$$THROWONERROR(sc, $Method(obj,"%Save"))
-    $$$THROWONERROR(sc, ..AbstractDestruction(classname, propName, mask, .values))
+    $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .values))
   } Catch ex {
     Set sc=ex.AsStatus()
   }
