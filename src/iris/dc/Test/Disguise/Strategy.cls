@@ -8,7 +8,7 @@ Method TestPartialMasking() As %Status
   Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
   Do $$$AssertEquals(test.Identifier, "576-56-1090")
   Kill test
-  Do $$$AssertStatusOK(##class(dc.Disguise.Core).PartialMasking("dc.PackageSample.Musician", "Identifier", 2, 3, "X"))
+  Do $$$AssertStatusOK(##class(dc.Disguise.Strategy).PartialMasking("dc.PackageSample.Musician", "Identifier", 2, 3, "X"))
   Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
   Do $$$AssertEquals(test.Identifier, "57X-XX-X090")
 }
@@ -20,7 +20,7 @@ Method TestDestruction() As %Status
   Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
   Do $$$AssertEquals(test.Identifier, "531.729.692-74")
   Kill test
-  Do $$$AssertStatusOK(##class(dc.Disguise.Core).Destruction("dc.PackageSample.Musician", "Identifier"))
+  Do $$$AssertStatusOK(##class(dc.Disguise.Strategy).Destruction("dc.PackageSample.Musician", "Identifier"))
   Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
   Do $$$AssertEquals(test.Identifier, "CONFIDENTIAL")
 }
