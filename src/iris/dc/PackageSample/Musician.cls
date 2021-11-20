@@ -17,10 +17,10 @@ Relationship Instrument As dc.PackageSample.Instrument [ Cardinality = one, Inve
 
 ClassMethod Create(name As %String = "", band As %String, instrument As %String = "", dob As %Date = "", identifier As %String = "", currency As %Numeric = "") As %Status
 {
-  Set tSC = $$$OK
+  Set sc = $$$OK
 	Try {
-    $$$THROWONERROR(tSC, ##Class(dc.PackageSample.Band).FindOrCreateByName(band, .Band))
-    $$$THROWONERROR(tSC, ##Class(dc.PackageSample.Instrument).FindOrCreateByName(instrument, .Instrument))
+    $$$THROWONERROR(sc, ##Class(dc.PackageSample.Band).FindOrCreateByName(band, .Band))
+    $$$THROWONERROR(sc, ##Class(dc.PackageSample.Instrument).FindOrCreateByName(instrument, .Instrument))
     Set obj=..%New()
     Set obj.FullName = name
     Set obj.Instrument = Instrument
@@ -30,9 +30,9 @@ ClassMethod Create(name As %String = "", band As %String, instrument As %String 
     Do Band.Musicians.Insert(obj)
     Return Band.%Save()
 	} Catch tException {
-		Set:$$$ISOK(tSC) tSC = tException.AsStatus()
+		Set:$$$ISOK(sc) sc = tException.AsStatus()
 	}
-  Return
+  Return sc
 }
 
 ClassMethod Clear() As %Status
