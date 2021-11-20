@@ -1,7 +1,7 @@
 Class dc.PackageSample.Band Extends %Persistent
 {
 
-Index IdxByName On Name;
+Index IdxName On Name [ Unique ];
 
 Property Name As %String;
 
@@ -10,17 +10,11 @@ Relationship Musicians As dc.PackageSample.Musician [ Cardinality = children, In
 ClassMethod FindOrCreateByName(name As %String, Output band As dc.PackageSample.Band) As %Status
 {
   Set sc = $$$OK
-  &sql(SELECT ID
-        INTO :id
-        FROM dc_PackageSample.Band
-        WHERE Name = :name)
-  If ((SQLCODE=0)||(id = "")) {
-    Set band = ..%New()
-    Set band.Name = name
-    Return band.%Save()
-  }
-  Set band = ..%OpenId(id)
-  Return sc
+  Set band = ..IdxNameOpen(name)
+  If ($IsObject(band)) Return sc
+  Set band = ..%New()
+  Set band.Name = name
+  Return band.%Save()
 }
 
 Storage Default

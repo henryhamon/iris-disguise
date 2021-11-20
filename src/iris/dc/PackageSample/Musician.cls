@@ -31,6 +31,7 @@ ClassMethod Create(name As %String = "", band As %String, instrument As %String 
     Return Band.%Save()
 	} Catch tException {
 		Set:$$$ISOK(sc) sc = tException.AsStatus()
+    W !!, $System.Status.GetOneErrorText(sc)
 	}
   Return sc
 }

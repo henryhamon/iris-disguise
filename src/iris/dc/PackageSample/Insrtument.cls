@@ -1,7 +1,7 @@
 Class dc.PackageSample.Instrument Extends %Persistent
 {
 
-Index IdxName On Name;
+Index IdxName On Name [ Unique ];
 
 Property Name As %String;
 
@@ -10,17 +10,13 @@ Relationship Musicians As dc.PackageSample.Musician [ Cardinality = many, Invers
 ClassMethod FindOrCreateByName(name As %String, Output instrument As dc.PackageSample.Instrument) As %Status
 {
   Set sc = $$$OK
-  &sql(SELECT ID
-        INTO :id
-        FROM dc_PackageSample.Band
-        WHERE Name = :name)
-  If ((SQLCODE=0)||(id = "")) {
-    Set instrument = ..%New()
-    Set instrument.Name = name
-    Return instrument.%Save()
+  Set instrument = ..IdxNameOpen(name)
+  If ($IsObject(instrument)) {
+    Return sc
   }
-  Set instrument = ..%OpenId(id)
-  Return sc
+  Set instrument = ..%New()
+  Set instrument.Name = name
+  Return instrument.%Save()
 }
 
 Storage Default
