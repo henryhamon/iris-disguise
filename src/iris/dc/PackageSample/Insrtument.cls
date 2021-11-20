@@ -14,7 +14,7 @@ ClassMethod FindOrCreateByName(name As %String, Output instrument As dc.PackageS
         INTO :id
         FROM dc_PackageSample.Band
         WHERE Name = :name)
-  If (id = "") {
+  If ((SQLCODE=0)||(id = "")) {
     Set instrument = ..%New()
     Set instrument.Name = name
     Return instrument.%Save()

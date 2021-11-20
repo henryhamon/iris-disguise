@@ -44,7 +44,7 @@ ClassMethod Clear() As %Status
     $$$THROWONERROR(sc, ##Class(dc.PackageSample.Band).%KillExtent())
 
 	} Catch tException {
-		Set:$$$ISOK(sc) tSC = tException.AsStatus()
+		Set:$$$ISOK(sc) sc = tException.AsStatus()
 	}
 	Return sc
 }
