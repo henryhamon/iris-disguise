@@ -36,4 +36,19 @@ Method TestRandomDate()
   Do $$$AssertTrue( value<=41953)
 }
 
+Method TestRandomNumeric()
+{
+  // Default Values
+  Set value = ##class(dc.Disguise.Core).RandomNumeric()
+  Do $$$AssertTrue( value>=1.0 )
+  Do $$$AssertTrue( value<=100.0 )
+  Do $$$AssertTrue( value'= ##class(dc.Disguise.Core).RandomNumeric())
+  Set value = ##class(dc.Disguise.Core).RandomNumeric(1.8, 70.4)
+  Do $$$AssertTrue( value>=1.80 )
+  Do $$$AssertTrue( value<=70.40 )
+  Set value = ##class(dc.Disguise.Core).RandomNumeric(1.80, 2.40)
+  Do $$$AssertTrue( value>=1.8 )
+  Do $$$AssertTrue( value<=2.4 )
+}
+
 }

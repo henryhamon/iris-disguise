@@ -22,6 +22,19 @@ ClassMethod Obfuscating(value As %String, prefixLength As %Integer = 1, suffixLe
   Return output
 }
 
+/// RandomNumeric
+/// Generates a random float between provided limits (default 1.00 to 100.00)
+ClassMethod RandomNumeric(from As %Numeric = 1.00, to As %Numeric = 100.00, scale As %Integer = 2) As %Numeric
+{
+	Set value = ""
+  Set min = $Translate($Fnumber(from,,scale),".","")
+  Set max = $Translate($fnumber(to,,scale),".","")
+	While ('..In(value,min,max)) {
+		Set value = $Random(max + 1)
+	}
+  Return $Extract(value,1,*-scale)_"."_$Extract(value,*-(scale-1),*)
+}
+
 /// RandomInteger
 /// Generates a random integer between provided limits (default 1 to 100)
 ClassMethod RandomInteger(from As %Integer = 1, to As %Integer = 100) As %Integer
@@ -49,7 +62,7 @@ ClassMethod RandomDate(date As %Date = "", delta As %Integer = 365, foward As %B
 }
 
 /// Check if a value is in a range
-ClassMethod In(value, min As %Integer, max As %Integer) As %Boolean [ Private ]
+ClassMethod In(value As %Integer, min As %Integer, max As %Integer) As %Boolean [ Private ]
 {
 	Return ((value>=min)&&(value<=max))
 }
