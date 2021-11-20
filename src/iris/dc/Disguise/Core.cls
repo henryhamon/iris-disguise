@@ -22,6 +22,38 @@ ClassMethod Obfuscating(value As %String, prefixLength As %Integer = 1, suffixLe
   Return output
 }
 
+/// RandomInteger
+/// Generates a random integer between provided limits (default 1 to 100)
+ClassMethod RandomInteger(from As %Integer = 1, to As %Integer = 100) As %Integer
+{
+	Set value = ""
+	While ('..In(value,from,to)) {
+		Set value = $Random(to + 1)
+	}
+	Return value
+}
+
+/// RandomDate
+/// Shifts date randomly within given delta range. Default shits date within 10 days + or -
+ClassMethod RandomDate(date As %Date = "", delta As %Integer = 365, foward As %Boolean = "") As %Date
+{
+  If (foward = "") {
+    Set foward = $Random(2) - 1
+  }
+  If (date = "") {
+    Set date = $Horolog
+  }
+  Set aux = $Random(delta) +1
+  Set value = $Case(foward,1:(date + aux),:((date - aux)+1))
+  Return $ZDate(value)
+}
+
+/// Check if a value is in a range
+ClassMethod In(value, min As %Integer, max As %Integer) As %Boolean [ Private ]
+{
+	Return ((value>=min)&&(value<=max))
+}
+
 ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
 {
   Set sc = $$$OK
