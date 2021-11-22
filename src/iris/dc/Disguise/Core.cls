@@ -150,6 +150,21 @@ ClassMethod ProcessRandomization(classname As %String, propName As %String, type
   Return sc
 }
 
+/// RandomFormattedStringNumber
+/// Randomize digits in a string while maintaining the format
+ClassMethod RandomFormattedStringNumber(template As %String, mask As %String = "#") As %String
+{
+  If (mask = "") Set mask = "#"
+	Set pos = $Find(template, mask,0)
+
+	While pos'=$$$NO {
+		Set value = $Random(10)
+		Set template = $Extract(template,0,pos-2)_value_$Extract(template,pos,*),
+			pos = $Find(template, mask,0)
+	}
+	Return template
+}
+
 /// Get SQL table name of the class
 ClassMethod SQLTableName(classname As %String) As %String [ Private ]
 {

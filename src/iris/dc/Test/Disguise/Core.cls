@@ -57,4 +57,11 @@ Method TestScramble()
   Do $$$AssertNotEquals(##class(dc.Disguise.Core).Scrambling(test), test)
 }
 
+Method TestRandomFormattedStringNumber()
+{
+  Set matcher=##class(%Regex.Matcher).%New("^\d{4}-\d{4}-\d{4}-\d{4}$")
+  Set matcher.Text = ##class(dc.Disguise.Core).RandomFormattedStringNumber("####-####-####-####")
+  Do $$$AssertTrue( matcher.Locate() )
+}
+
 }
