@@ -1,77 +1,54 @@
-# intersystems-iris-dev-template
-This is a basic template to develop with InterSystems IRIS
+[![Gitter](https://img.shields.io/badge/Available%20on-Intersystems%20Open%20Exchange-00b2a9.svg)](https://openexchange.intersystems.com/package/iris-disguise)
 
-## Description
-* The template uses InterSystems IRIS Community Edition running in a docker container
-* It uses ZPM Package Manager to load InterSystems ObjectScript
-* It creates a Namespace IRISAPP without interoperability Enabled
-* It is designed to develop with Package First paradigm
+# iris-disguise #
 
-## Usage
-start a new dev repository with InterSystems IRIS using this one as a template.
-Once you clone the new repo on your laptop and open the VSCode with installed InterSystems Pack you'll be able to start development immediately
+![Iris Disguise](assets/fake.png?raw=true)
+
+> **iris-Disguise** is a tool for Data Anonymization on IterSystems IRIS.
+
+**iris-Disguise** that helps you build anonymized production data dumps which you can use for performance testing, security testing, debugging and development.
+
+> Data anonymization is a type of information sanitization whose intent is privacy protection. It is the process of removing personally identifiable information from data sets, so that the people whom the data describe remain anonymous. [Wikipedia](https://en.wikipedia.org/wiki/Data_anonymization)
+
+[disguise](https://media.giphy.com/media/3oEjHPuFDT0CpthWCY/giphy.gif)
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
-## Installation 
-Clone/git pull the repo into any local directory
+## Installation
+
+Open terminal and clone/git pull the repo into any local directory as shown below:
+
 ```
-$ git clone https://github.com/intersystems-community/intersystems-iris-dev-template.git
+git clone https://github.com/henryhamon/iris-disguise.git
 ```
 
 Open the terminal in this directory and run:
 
 ```
-$ docker-compose build
+docker-compose build
 ```
 
-3. Run the IRIS container with your project:
+### Installation with ZPM
 
 ```
-$ docker-compose up -d
+zpm:USER>install iris-disguise
 ```
 
-## How to Test it
+## How to Test
+
+### Unit Test
 
 Open IRIS terminal:
 
 ```
-$ docker-compose exec iris iris session iris
-IRISAPP>write ##class(dc.PackageSample.ObjectScript).Test()
+docker-compose exec iris iris session iris -U IRISAPP
 ```
-## How to start coding
-This repository is ready to code in VSCode with ObjectScript plugin.
-Install [VSCode](https://code.visualstudio.com/), [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) and [ObjectScript](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript) plugin and open the folder in VSCode.
-Open /src/cls/PackageSample/ObjectScript.cls class and try to make changes - it will be compiled in running IRIS docker container.
-![docker_compose](https://user-images.githubusercontent.com/2781759/76656929-0f2e5700-6547-11ea-9cc9-486a5641c51d.gif)
 
-Feel free to delete PackageSample folder and place your ObjectScript classes in a form
-/src/Package/Classname.cls
-[Read more about folder setup for InterSystems ObjectScript](https://community.intersystems.com/post/simplified-objectscript-source-folder-structure-package-manager)
+```
+Set ^UnitTestRoot = "/irisrun/repo/src/iris/dc/Test/Disguise/"
+Do ##class(%UnitTest.Manager).RunTest("","/loadudl")
+```
 
-The script in Installer.cls will import everything you place under /src into IRIS.
-
-
-## What's inside the repository
-
-### Dockerfile
-
-The simplest dockerfile which starts IRIS and imports code from /src folder into it.
-Use the related docker-compose.yml to easily setup additional parametes like port number and where you map keys and host folders.
-
-
-### src folder
-src/iris contains InterSystems IRIS Objectscript code
-src/java containers Java code 
-src/python - python code, etc.
-
-
-### .vscode/settings.json
-
-Settings file to let you immedietly code in VSCode with [VSCode ObjectScript plugin](https://marketplace.visualstudio.com/items?itemName=daimor.vscode-objectscript))
-
-### .vscode/launch.json
-Config file if you want to debug with VSCode ObjectScript
-
-[Read about all the files in this artilce](https://community.intersystems.com/post/dockerfile-and-friends-or-how-run-and-collaborate-objectscript-projects-intersystems-iris)
+## Credits
+Icon by Flaticon from [www.flaticon.com](https://www.flaticon.com/authors/smashicons)
