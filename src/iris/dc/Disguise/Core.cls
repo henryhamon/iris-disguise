@@ -27,6 +27,8 @@ ClassMethod Obfuscating(value As %String, prefixLength As %Integer = 1, suffixLe
 ClassMethod RandomNumeric(from As %Numeric = 1.00, to As %Numeric = 100.00, scale As %Integer = 2) As %Numeric
 {
 	Set value = ""
+  If (from = "") Set from = 1.00
+  If (to = "") Set to = 100.00
   Set min = $Translate($Fnumber(from,,scale),".","")
   Set max = $Translate($fnumber(to,,scale),".","")
 	While ('..In(value,min,max)) {
@@ -40,6 +42,8 @@ ClassMethod RandomNumeric(from As %Numeric = 1.00, to As %Numeric = 100.00, scal
 ClassMethod RandomInteger(from As %Integer = 1, to As %Integer = 100) As %Integer
 {
 	Set value = ""
+  If (from = "") Set from = 1
+  If (to = "") Set to = 100
 	While ('..In(value,from,to)) {
 		Set value = $Random(to + 1)
 	}
@@ -81,6 +85,31 @@ ClassMethod ProcessDestruction(classname As %String, propName As %String, mask A
     Set $Property(obj, propName) = mask
     $$$THROWONERROR(sc, $Method(obj,"%Save"))
     $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .values))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod ProcessRandomization(classname As %String, propName As %String, type As %String = "integer", from As %String = "", to As %String = "", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    If ('values.%Next()) {
+      Return sc
+    }
+    Set obj = $Classmethod(classname, "%OpenId", values.ID)
+    If ('$IsObject(obj)) {
+      $$$THROWONERROR(sc, ..ProcessRandomization(classname, propName, type, from, to, .values))
+    }
+    Set randomMethod = "Random"_$ZConvert($Extract(type,1,1),"U")_$Extract(type,2,*)
+    If (type = "date") {
+      Set $Property(obj, propName) = $Classmethod("dc.Disguise.Core", randomMethod)
+    } Else {
+      Set $Property(obj, propName) = $Classmethod("dc.Disguise.Core", randomMethod, from, to)
+    }
+    $$$THROWONERROR(sc, $Method(obj,"%Save"))
+    $$$THROWONERROR(sc, ..ProcessRandomization(classname, propName, type, from, to, .values))
   } Catch ex {
     Set sc=ex.AsStatus()
   }

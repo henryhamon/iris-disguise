@@ -2,13 +2,21 @@
 Class dc.Disguise.Strategy Extends Core
 {
 
+/// Radomization Types
+Parameter RandomizationTypes = {$ListFromString("integer,numeric,date",",")};
+
 /// Randomization
 /// Generate purely random data
 ClassMethod Randomization(classname As %String, propName As %String, type As %String = "", from As %String = "", to As %String = "") As %Status
 {
   Set sc = $$$OK
   Try {
+    If (type="") Set type = "integer"
+    If ($ListFind(..#RandomizationTypes, $ZConvert(type,"l")) = 0) {
+      Return $$$ERROR(5002,"Randomization type not found")
+    }
     $$$THROWONERROR(sc, ..GetAllData(classname, .results))
+    $$$THROWONERROR(sc, ..ProcessRandomization(classname, propName, type, from, to, .results))
   } Catch ex {
     Set sc=ex.AsStatus()
   }
