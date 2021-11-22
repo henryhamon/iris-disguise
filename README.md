@@ -4,7 +4,7 @@
 
 > **iris-Disguise** is a tool for Data Anonymization on IterSystems IRIS.
 
-**iris-Disguise** that helps you build anonymized production data dumps which you can use for performance testing, security testing, debugging and development.
+**iris-Disguise** helps you to build anonymized production data dumps which you can use for performance testing, security testing, debugging and development.
 
 ![disguise](https://media.giphy.com/media/3oEjHPuFDT0CpthWCY/giphy.gif)
 
