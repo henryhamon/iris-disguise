@@ -85,7 +85,7 @@ ClassMethod In(value As %Integer, min As %Integer, max As %Integer) As %Boolean 
 	Return ((value>=min)&&(value<=max))
 }
 
-ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status
 {
   Set sc = $$$OK
   Try {
@@ -105,7 +105,7 @@ ClassMethod ProcessDestruction(classname As %String, propName As %String, mask A
   Return sc
 }
 
-ClassMethod ProcessScramble(classname As %String, propName As %String, ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+ClassMethod ProcessScramble(classname As %String, propName As %String, ByRef values As %SQL.StatementResult = "") As %Status
 {
   Set sc = $$$OK
   Try {
@@ -125,7 +125,7 @@ ClassMethod ProcessScramble(classname As %String, propName As %String, ByRef val
   Return sc
 }
 
-ClassMethod ProcessRandomization(classname As %String, propName As %String, type As %String = "integer", from As %String = "", to As %String = "", ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+ClassMethod ProcessRandomization(classname As %String, propName As %String, type As %String = "integer", from As %String = "", to As %String = "", ByRef values As %SQL.StatementResult = "") As %Status
 {
   Set sc = $$$OK
   Try {
@@ -176,7 +176,7 @@ ClassMethod SQLTableName(classname As %String) As %String [ Private ]
 }
 
 /// Get all data from persistent class
-ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As %Status [ Private ]
+ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As %Status
 {
   Set sc = $$$OK
   Try {
