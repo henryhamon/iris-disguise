@@ -51,4 +51,10 @@ Method TestRandomNumeric()
   Do $$$AssertTrue( value<=2.4 )
 }
 
+Method TestScramble()
+{
+  Set test = "the quick brown fox jumps over the lazy dog"
+  Do $$$AssertNotEquals(##class(dc.Disguise.Core).Scrambling(test), test)
+}
+
 }

@@ -46,4 +46,16 @@ Method TestRandomization() As %Status
   Do $$$AssertTrue( testB.Currency <=100.0 )
 }
 
+Method TestScramble() As %Status
+{
+  Do ##class(dc.PackageSample.Musician).Populate()
+  Set musicianID = "2||10"
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertEquals(test.FullName, "Kiko Loureiro")
+  Kill test
+  Do $$$AssertStatusOK(##class(dc.Disguise.Strategy).Scramble("dc.PackageSample.Musician", "FullName"))
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertNotEquals(test.FullName, "Kiko Loureiro")
+}
+
 }

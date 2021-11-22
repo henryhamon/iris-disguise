@@ -65,6 +65,20 @@ ClassMethod RandomDate(date As %Date = "", delta As %Integer = 365, foward As %B
   Return $ZDate(value)
 }
 
+/// Scramble
+/// Given "ABCDEFG", return something like "GEFBDCA"
+ClassMethod Scrambling(value As %String) As %String
+{
+  Set len = $Length(value)
+  For idx=1:1:len {
+    Set tmp = $Extract(value, idx, idx)
+    Set rand = $Random(len) + 1
+    Set $Extract(value, idx, idx) = $Extract(value, rand, rand)
+    Set $Extract(value, rand, rand) = tmp
+  }
+  Return value
+}
+
 /// Check if a value is in a range
 ClassMethod In(value As %Integer, min As %Integer, max As %Integer) As %Boolean [ Private ]
 {
@@ -85,6 +99,26 @@ ClassMethod ProcessDestruction(classname As %String, propName As %String, mask A
     Set $Property(obj, propName) = mask
     $$$THROWONERROR(sc, $Method(obj,"%Save"))
     $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .values))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod ProcessScramble(classname As %String, propName As %String, ByRef values As %SQL.StatementResult = "") As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    If ('values.%Next()) {
+      Return sc
+    }
+    Set obj = $Classmethod(classname, "%OpenId", values.ID)
+    If ('$IsObject(obj)) {
+      $$$THROWONERROR(sc, ..ProcessScramble(classname, propName, .values))
+    }
+    Set $Property(obj, propName) = ..Scrambling($Property(obj, propName))
+    $$$THROWONERROR(sc, $Method(obj,"%Save"))
+    $$$THROWONERROR(sc, ..ProcessScramble(classname, propName, .values))
   } Catch ex {
     Set sc=ex.AsStatus()
   }

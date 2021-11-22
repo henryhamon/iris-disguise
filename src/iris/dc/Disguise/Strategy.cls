@@ -37,6 +37,20 @@ ClassMethod Destruction(classname As %String, propName As %String, mask As %Stri
   Return sc
 }
 
+/// Scramble
+/// 
+ClassMethod Scramble(classname As %String, propName As %String) As %Status
+{
+  Set sc = $$$OK
+  Try {
+    $$$THROWONERROR(sc, ..GetAllData(classname, .results))
+    $$$THROWONERROR(sc, ..ProcessScramble(classname, propName, .results))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
 /// Partial Masking
 /// leaves out some part of the data.
 ClassMethod PartialMasking(classname As %String, propName As %String, prefixLength As %Integer = 1, suffixLength As %Integer = 1, mask As %String = "X") As %Status
