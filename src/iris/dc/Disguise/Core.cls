@@ -1,6 +1,9 @@
 Class dc.Disguise.Core
 {
 
+/// TLD options
+Parameter TLD = {$ListBuild("com","org","net","edu","gov","mil","biz","info")};
+
 /// obfuscator
 /// Write ##class(dc.Disguise.Core).Obfuscating("4567 6365 7987 3783",3,3,"X")
 /// ; 456X XXXX XXXX X783
@@ -77,6 +80,16 @@ ClassMethod Scrambling(value As %String) As %String
     Set $Extract(value, rand, rand) = tmp
   }
   Return value
+}
+
+/// RandomEmail
+/// Generates email randomly using the given HOSTNAME and TLD. By defaults generates hostname randomly along with email id.
+ClassMethod RandomEmail(username As %String = "", hostname As %String = "", TLD As %String = "") As %String
+{
+  If (username = "") Set username = $ZConvert(##class(%Library.PopulateUtils).FirstName()  _ ##class(%Library.PopulateUtils).LastName() _ ##class(%Library.PopulateUtils).String(4), "l")
+  If (hostname = "") Set hostname = $Translate($ZConvert(##class(%Library.PopulateUtils).Company(), "l"),",. *&","")
+  If (TLD = "") Set TLD = $List(..#TLD, $Random($ListLength(..#TLD))+1)
+  Return $Replace(username," ","") _ "@" _ hostname _ "." _ TLD
 }
 
 /// Check if a value is in a range

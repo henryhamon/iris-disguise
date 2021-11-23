@@ -64,4 +64,14 @@ Method TestRandomFormattedStringNumber()
   Do $$$AssertTrue( matcher.Locate() )
 }
 
+Method TestRandomEmail()
+{
+  Set matcher=##class(%Regex.Matcher).%New("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)$")
+  Set matcher.Text = ##class(dc.Disguise.Core).RandomEmail()
+  Do $$$AssertTrue( matcher.Locate() )
+  Set matcher=##class(%Regex.Matcher).%New("^fake_fake@[a-z0-9-]+(\.[a-z0-9-]+)$")
+  Set matcher.Text = ##class(dc.Disguise.Core).RandomEmail("fake_fake")
+  Do $$$AssertTrue( matcher.Locate() )
+}
+
 }

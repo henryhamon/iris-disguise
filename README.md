@@ -10,6 +10,13 @@
 
 > Data anonymization is a type of information sanitization whose intent is privacy protection. It is the process of removing personally identifiable information from data sets, so that the people whom the data describe remain anonymous. [Wikipedia](https://en.wikipedia.org/wiki/Data_anonymization)
 
+**iris-Disguise** provides a set of anonymization strategies:
+* **Destruction**  _Sometimes the fastest and the best approach to anonymize a data is to replace all the values with the word CONFIDENTIAL_
+* **Randomization** _Generate purely random data_
+* **Partial Masking** _leaves out some part of the data_
+* **Scramble** _Given "ABCDEFG", return something like "GEFBDCA"_
+
+
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
