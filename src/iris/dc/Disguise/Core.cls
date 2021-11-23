@@ -98,6 +98,13 @@ ClassMethod In(value As %Integer, min As %Integer, max As %Integer) As %Boolean 
 	Return ((value>=min)&&(value<=max))
 }
 
+/// FakeCity
+/// returns a city from %Library.PopulateUtils
+ClassMethod FakeCity() As %String
+{
+  Return ##class(%Library.PopulateUtils).City()
+}
+
 ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status
 {
   Set sc = $$$OK
