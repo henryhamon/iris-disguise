@@ -105,6 +105,42 @@ ClassMethod FakeCity() As %String
   Return ##class(%Library.PopulateUtils).City()
 }
 
+/// returns a country from %Library.PopulateUtils
+ClassMethod FakeCountry()
+{
+  Return ##class(%Library.PopulateUtils).City()
+}
+
+/// returns a generic company name from %Library.PopulateUtils
+ClassMethod FakeCompany()
+{
+  Return ##class(%Library.PopulateUtils).Company()
+}
+
+/// returns a valid email address
+ClassMethod FakeEmail()
+{
+  Return ..RandomEmail()
+}
+
+///  returns a generic first name from %Library.PopulateUtils
+ClassMethod FakeFirstName()
+{
+  Return ##class(%Library.PopulateUtils).FirstName()
+}
+
+///  returns a generic last name from %Library.PopulateUtils
+ClassMethod FakeLastName()
+{
+  Return ##class(%Library.PopulateUtils).LastName()
+}
+
+///  returns a generic full name from %Library.PopulateUtils
+ClassMethod FakeFullName()
+{
+  Return ##class(%Library.PopulateUtils).Name()
+}
+
 ClassMethod ProcessDestruction(classname As %String, propName As %String, mask As %String = "CONFIDENTIAL", ByRef values As %SQL.StatementResult = "") As %Status
 {
   Set sc = $$$OK
