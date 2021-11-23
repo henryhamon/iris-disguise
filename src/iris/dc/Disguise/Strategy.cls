@@ -73,4 +73,28 @@ ClassMethod PartialMasking(classname As %String, propName As %String, prefixLeng
   Return sc
 }
 
+/// Shuffling
+/// mixes values within the same columns.
+ClassMethod Shuffling(classname As %String, propName As %String) As %Status
+{
+  Set sc = $$$OK
+  Try {
+    Set list = ##class(%ListOfDataTypes).%New()
+    $$$THROWONERROR(sc, ##class(dc.Disguise.Core).RowCount(classname, .total))
+    Set rows = total
+    While (rows > 1) {
+      Set first = ##class(dc.Disguise.Core).ChooseRandom(total, .list)
+      Set second = ##class(dc.Disguise.Core).ChooseRandom(total, .list)
+      $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetRow(classname, first, .firstId))
+      $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetRow(classname, second, .secondId))
+
+      Set rows = rows - 2
+    }
+
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
 }
