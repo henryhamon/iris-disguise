@@ -57,14 +57,14 @@ ClassMethod PartialMasking(classname As %String, propName As %String, prefixLeng
 {
   Set sc = $$$OK
   Try {
-    $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetAllData(classname, .results))
+    $$$THROWONERROR(sc, ##class(Core).GetAllData(classname, .results))
     //TStart
     While (results.%Next()) {
       Set obj = $Classmethod(classname, "%OpenId", results.ID)
       If ('$IsObject(obj)) {
         Continue
       }
-      Set $Property(obj, propName) = ##class(dc.Disguise.Core).Obfuscating($Property(obj, propName), prefixLength, suffixLength, mask)
+      Set $Property(obj, propName) = ##class(Core).Obfuscating($Property(obj, propName), prefixLength, suffixLength, mask)
       $$$THROWONERROR(sc, $Method(obj,"%Save"))
     }
   } Catch ex {
@@ -75,22 +75,16 @@ ClassMethod PartialMasking(classname As %String, propName As %String, prefixLeng
 
 /// Shuffling
 /// mixes values within the same columns.
+/// This is useful for foreign keys because referential integrity will be kept.
+/// 
+/// Until now, this method only works on one-to-many relationships.
+/// TODO: Work on parent-child relationships.
+/// TODO: Improve performance for large datasets.
 ClassMethod Shuffling(classname As %String, propName As %String) As %Status
 {
   Set sc = $$$OK
   Try {
-    Set list = ##class(%ListOfDataTypes).%New()
-    $$$THROWONERROR(sc, ##class(dc.Disguise.Core).RowCount(classname, .total))
-    Set rows = total
-    While (rows > 1) {
-      Set first = ##class(dc.Disguise.Core).ChooseRandom(total, .list)
-      Set second = ##class(dc.Disguise.Core).ChooseRandom(total, .list)
-      $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetRow(classname, first, .firstId))
-      $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetRow(classname, second, .secondId))
-
-      Set rows = rows - 2
-    }
-
+    $$$THROWONERROR(sc, ##class(Shuffle).Process(classname, propName))
   } Catch ex {
     Set sc=ex.AsStatus()
   }

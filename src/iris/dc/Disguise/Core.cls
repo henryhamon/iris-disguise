@@ -179,7 +179,7 @@ ClassMethod RandomFormattedStringNumber(template As %String, mask As %String = "
 }
 
 /// Get SQL table name of the class
-ClassMethod SQLTableName(classname As %String) As %String [ Private ]
+ClassMethod SQLTableName(classname As %String) As %String
 {
   Set class = ##class(%Dictionary.CompiledClass).%OpenId(classname, .sc)
   If ($$$ISERR(sc)) {
@@ -205,99 +205,6 @@ ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As
     Set results = tStatement.%Execute()
   } Catch ex {
     Set sc=ex.AsStatus()
-  }
-  Return sc
-}
-
-ClassMethod RowCount(classname As %String, Output rows As %Integer = 0) As %Status
-{
-  Set sc = $$$OK
-  Try {
-    Set tablename = ..SQLTableName(classname)
-    If (tablename = "") {
-      Throw $$$ERROR(5517)
-    }
-    Set tStatement = ##class(%SQL.Statement).%New()
-    Set sc = tStatement.%Prepare("Select Count(ID) as total From "_tablename)
-    If ($$$ISERR(sc)) {
-      Throw sc
-    }
-    Set results = tStatement.%Execute()
-    If (results.%Next()) {
-      Set rows = results.total
-    }
-  } Catch ex {
-    Set sc=ex.AsStatus()
-  }
-  Return sc
-}
-
-ClassMethod ChooseRandom(size As %Integer, ByRef list As %ListOfDataTypes = "") As %String
-{
-  If (list = "") Set list = ##class(%ListOfDataTypes).%New()
-  Set output = $Random(size) + 1
-  While (list.Find(output)) {
-    Set output = $Random(size) + 1
-  }
-  Do list.Insert(output)
-
-  Return output
-}
-
-/// Probably there is a better way to do this
-ClassMethod GetRow(classname As %String, row As %Integer, Output objId As %String) As %Status
-{
-  Set sc = $$$OK
-  Try {
-    Set tablename = ..SQLTableName(classname)
-    If (tablename = "") {
-      Throw $$$ERROR(5517)
-    }
-    Set tStatement = ##class(%SQL.Statement).%New()
-    Set sc = tStatement.%Prepare("SELECT *,%vid FROM (Select ID From "_tablename_") WHERE %VID = "_row)
-    If ($$$ISERR(sc)) {
-      Throw sc
-    }
-    Set results = tStatement.%Execute()
-    If (results.%Next()) {
-      Set objId = results.ID
-    }
-  } Catch ex {
-    Set sc=ex.AsStatus()
-  }
-  Return sc
-}
-
-ClassMethod ChangePlaces(classname As %String, propName As %String, firstId As %String, secondId As %String) As %Status
-{
-  Set sc = $$$OK
-  Try {
-    Set tablename = ..SQLTableName(classname)
-    Set sql = "UPDATE "_tablename_" SET "_propName_" = '"_secondId_"' WHERE ID = '"_firstId_"' "
-    $$$THROWONERROR(sc, ..UpdateExecute(sql))
-    Set sql = " UPDATE "_tablename_" SET "_propName_" = '"_firstId_"' WHERE ID = '"_secondId_"' "
-    $$$THROWONERROR(sc, ..UpdateExecute(sql))
-  } Catch ex {
-    Set sc=ex.AsStatus()
-    W !, "Error: ", $System.Status.GetErrorText(sc)
-  }
-  Return sc
-}
-
-ClassMethod UpdateExecute(sql As %String) As %Status [ Private ]
-{
-  Set sc = $$$OK
-  Try {
-    Set tStatement = ##class(%SQL.Statement).%New()
-    Set tStatement.%SelectMode = 1
-    Set sc = tStatement.%Prepare(sql)
-    If ($$$ISERR(sc)) {
-      Throw sc
-    }
-    W tStatement.%Execute()
-  } Catch ex {
-    Set sc=ex.AsStatus()
-    W !, "Error: ", $System.Status.GetErrorText(sc)
   }
   Return sc
 }

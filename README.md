@@ -15,7 +15,7 @@
 * **Randomization** _Generate purely random data_
 * **Partial Masking** _leaves out some part of the data_
 * **Scramble** _Given "ABCDEFG", return something like "GEFBDCA"_
-
+* **Shuffling** _mixes values within the same columns_
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.

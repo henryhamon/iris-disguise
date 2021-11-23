@@ -58,4 +58,16 @@ Method TestScramble() As %Status
   Do $$$AssertNotEquals(test.FullName, "Kiko Loureiro")
 }
 
+Method TestShuffle()
+{
+  Do ##class(dc.PackageSample.Musician).Populate()
+  Set musicianID = "2||10"
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertEquals(test.FullName, "Kiko Loureiro")
+  Kill test
+  Do $$$AssertStatusOK(##class(dc.Disguise.Strategy).Shuffling("dc.PackageSample.Musician", "FullName"))
+  Set test = ##class(dc.PackageSample.Musician).%OpenId(musicianID)
+  Do $$$AssertNotEquals(test.FullName, "Kiko Loureiro")
+}
+
 }
