@@ -48,12 +48,82 @@ ClassMethod DisguiseStrategyProcess(props As %ListOfDataTypes) As %Status [ Priv
     For idx=1:1:props.Count() {
       Set prop = ##class(%Dictionary.PropertyDefinition).%OpenId(props.GetAt(idx))
       If (prop.Type = "dc.Disguise.DataTypes.PartialMaskString") {
-        Set mask = prop.Parameters.GetAt("Mask")
-        Set prefx = prop.Parameters.GetAt("prefixLength")
-        Set sufx = prop.Parameters.GetAt("suffixLength")
-        $$$ThrowOnError(##class(Strategy).PartialMasking($Classname($This),prop.Name,prefx,sufx,mask))
+        $$$ThrowOnError(..PartialMaskString(prop))
+      }
+      If ((prop.Type = "dc.Disguise.DataTypes.RandomInteger")||(prop.Type = "dc.Disguise.DataTypes.RandomNumeric")) {
+        $$$ThrowOnError(..RandomNumber(prop))
+      }
+      If (prop.Type = "dc.Disguise.DataTypes.String") {
+        $$$ThrowOnError(..DisguiseStringType(prop))
+      }
+      If (prop.Type = "dc.Disguise.DataTypes.FakeString") {
+        $$$ThrowOnError(..FakeString(prop))
       }
     }
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod PartialMaskString(prop As %Dictionary.PropertyDefinition) As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    Set mask = prop.Parameters.GetAt("Mask")
+    Set prefx = prop.Parameters.GetAt("prefixLength")
+    Set sufx = prop.Parameters.GetAt("suffixLength")
+    $$$ThrowOnError(##class(Strategy).PartialMasking($Classname($This), prop.Name, prefx, sufx, mask))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod RandomNumber(prop As %Dictionary.PropertyDefinition) As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    Set from = prop.Parameters.GetAt("From")
+    Set to = prop.Parameters.GetAt("To")
+    If (from="") Set from = prop.Parameters.GetAt("MINVAL")
+    If (to="") Set to = prop.Parameters.GetAt("MAXVAL")
+    Set typ = "integer"
+    If (prop.Type = "dc.Disguise.DataTypes.RandomNumeric") Set typ = "numeric"
+    $$$ThrowOnError(##class(Strategy).Randomization($Classname($This), prop.Name, typ, from, to))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod DisguiseStringType(prop As %Dictionary.PropertyDefinition) As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
+    Set strategy = prop.Parameters.GetAt("FieldStrategy")
+    If (strategy = "DESTRUCTION") {
+      Set mask = prop.Parameters.GetAt("Mask")
+      W !,$CLASSNAME($This)
+      W !, prop.Name
+      $$$ThrowOnError(##class(Strategy).Destruction($Classname($This), prop.Name, mask))
+    }
+    If (strategy = "SCRAMBLE") {
+      $$$ThrowOnError(##class(Strategy).Scramble($Classname($This), prop.Name))
+    }
+    If (strategy = "SHUFFLING") {
+      $$$ThrowOnError(##class(Strategy).Shuffling($Classname($This), prop.Name))
+    }
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod FakeString(prop As %Dictionary.PropertyDefinition) As %Status [ Private ]
+{
+  Set sc = $$$OK
+  Try {
   } Catch ex {
     Set sc=ex.AsStatus()
   }

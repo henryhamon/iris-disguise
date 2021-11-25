@@ -5,13 +5,9 @@ Index IdxName On Name [ Unique ];
 
 Property Name As %String;
 
-Property Manager As dc.Disguise.DataTypes.PartialMaskString;
+Property Manager As dc.Disguise.DataTypes.String(FieldStrategy = "DESTRUCTION");
 
-Property Contact As %String;
-
-Property Zip As %String;
-
-Property Price As %Numeric;
+Property Price As dc.Disguise.DataTypes.RandomNumeric;
 
 Relationship Musicians As dc.PackageSample.Musician [ Cardinality = children, Inverse = Band ];
 
@@ -38,12 +34,6 @@ Storage Default
 <Value>Manager</Value>
 </Value>
 <Value name="4">
-<Value>Contact</Value>
-</Value>
-<Value name="5">
-<Value>Zip</Value>
-</Value>
-<Value name="6">
 <Value>Price</Value>
 </Value>
 </Data>

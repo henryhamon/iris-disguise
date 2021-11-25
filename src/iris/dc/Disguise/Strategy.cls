@@ -29,6 +29,7 @@ ClassMethod Destruction(classname As %String, propName As %String, mask As %Stri
 {
   Set sc = $$$OK
   Try {
+    W !, "here", classname, " ", propName
     $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetAllData(classname, .results))
     $$$THROWONERROR(sc, ##class(dc.Disguise.Core).ProcessDestruction(classname, propName, mask, .results))
   } Catch ex {
