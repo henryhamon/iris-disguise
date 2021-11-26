@@ -4,6 +4,9 @@ Class dc.Disguise.Core
 /// TLD options
 Parameter TLD = {$ListBuild("com","org","net","edu","gov","mil","biz","info")};
 
+/// Number of chunks to divide the table
+Parameter Chunks = 8;
+
 /// obfuscator
 /// Write ##class(dc.Disguise.Core).Obfuscating("4567 6365 7987 3783",3,3,"X")
 /// ; 456X XXXX XXXX X783
@@ -231,8 +234,34 @@ ClassMethod SQLTableName(classname As %String) As %String
   Return class.SqlQualifiedNameQ
 }
 
+/// Split table data in chunks
+ClassMethod GetChunks(classname As %String, Output chunks As %List = "") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    Set class = ##class(%Dictionary.ClassDefinition).%OpenId(classname, .sc)
+    If ($$$ISERR(sc)) {
+      Throw $$$ERROR(5517)
+    }
+    If (class.Storages.Count() = 0) {
+      Throw $$$ERROR(5518)
+    }
+    Set split = $$SplitSize^%GSIZE(class.Storages.GetAt(1).DataLocation, "N", ..#Chunks,,)
+    Set returnCode = $list(split, 1)
+		Set chunks = $list(split, 2)
+    If (returnCode = 0) { // SubscriptList - I don't know yet how to solve this
+      Set chunks = ""
+      Return sc
+    }
+    If (returnCode'=1) $$$ThrowStatus($$$ERROR(5002, "Split Size error: "_returnCode))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
 /// Get all data from persistent class
-ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As %Status
+ClassMethod GetAllData(classname As %String, Output results As %SQL.StatementResult, start As %String = "", end As %String = "") As %Status
 {
   Set sc = $$$OK
   Try {
@@ -240,8 +269,23 @@ ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As
     If (tablename = "") {
       Throw $$$ERROR(5517)
     }
+
+    // Split in chunks
+    Set where = ""
+    Set start = ..removebadwrd(start)
+    Set end = ..removebadwrd(end)
+		If start'="",end'="" {
+			Set where = " WHERE ID >= '"_ start _"' AND ID < '"_end_"'"
+		}
+		ElseIf start="",end'="" {
+			Set where = " WHERE ID < '"_end_"'"
+		}
+		ElseIf end="",start'="" {
+			Set where = " WHERE ID >='"_ start_"'"
+		}
+
     Set tStatement = ##class(%SQL.Statement).%New()
-    Set sc = tStatement.%Prepare("Select ID From "_tablename)
+    Set sc = tStatement.%Prepare("Select ID From "_tablename_where)
     If ($$$ISERR(sc)) {
       Throw sc
     }
@@ -250,6 +294,16 @@ ClassMethod GetAllData(classname As %String, results As %SQL.StatementResult) As
     Set sc=ex.AsStatus()
   }
   Return sc
+}
+
+ClassMethod removebadwrd(raw As %String = "") As %String [ Private ]
+{
+  If (raw = "") Return ""
+  Set aux = $ZConvert(raw, "l")
+  If ($Find(aux, "select ", 1)||$Find(aux, "delete ")||$Find(aux, "insert ")) {
+    Return ""
+  }
+  Return raw
 }
 
 }
