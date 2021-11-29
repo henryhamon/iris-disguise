@@ -127,19 +127,19 @@ ClassMethod FakeEmail()
 }
 
 ///  returns a generic first name from %Library.PopulateUtils
-ClassMethod FakeFirstName()
+ClassMethod FakeFirstname()
 {
   Return ##class(%Library.PopulateUtils).FirstName()
 }
 
 ///  returns a generic last name from %Library.PopulateUtils
-ClassMethod FakeLastName()
+ClassMethod FakeLastname()
 {
   Return ##class(%Library.PopulateUtils).LastName()
 }
 
 ///  returns a generic full name from %Library.PopulateUtils
-ClassMethod FakeFullName()
+ClassMethod FakeFullname()
 {
   Return ##class(%Library.PopulateUtils).Name()
 }
@@ -203,6 +203,28 @@ ClassMethod ProcessRandomization(classname As %String, propName As %String, type
     }
     $$$THROWONERROR(sc, $Method(obj,"%Save"))
     $$$THROWONERROR(sc, ..ProcessRandomization(classname, propName, type, from, to, .values))
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod ProcessFake(classname As %String, propName As %String, type As %String = "FullName", ByRef values As %SQL.StatementResult = "") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    If ('values.%Next()) {
+      Return sc
+    }
+    Set type = $ZConvert(type, "l")
+    Set obj = $Classmethod(classname, "%OpenId", values.ID)
+    If ('$IsObject(obj)) {
+      $$$THROWONERROR(sc, ..ProcessFake(classname, propName, type, .values))
+    }
+    Set fakeMethod = "Fake"_$ZConvert($Extract(type,1,1),"U")_$Extract(type,2,*)
+    Set $Property(obj, propName) = $Classmethod("dc.Disguise.Core", fakeMethod)
+    $$$THROWONERROR(sc, $Method(obj,"%Save"))
+    $$$THROWONERROR(sc, ..ProcessFake(classname, propName, type, .values))
   } Catch ex {
     Set sc=ex.AsStatus()
   }

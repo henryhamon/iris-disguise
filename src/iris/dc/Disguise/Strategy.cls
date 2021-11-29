@@ -5,6 +5,9 @@ Class dc.Disguise.Strategy
 /// Radomization Types
 Parameter RandomizationTypes = {$ListFromString("integer,numeric,date",",")};
 
+/// Fake Types
+Parameter FakeTypes = {$ListFromString("firstname,lastname,fullname,company,country,city,email",",")};
+
 /// Randomization
 /// Generate purely random data
 ClassMethod Randomization(classname As %String, propName As %String, type As %String = "", from As %String = "", to As %String = "") As %Status
@@ -143,6 +146,43 @@ ClassMethod PartialMaskingChunks(classname As %String, propName As %String, pref
       Set $Property(obj, propName) = ##class(Core).Obfuscating($Property(obj, propName), prefixLength, suffixLength, mask)
       $$$THROWONERROR(sc, $Method(obj,"%Save"))
     }
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+/// Fake
+/// Generate fake data
+ClassMethod Fake(classname As %String, propName As %String, type As %String = "", from As %String = "", to As %String = "") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    $$$ThrowOnError(..WorkMgrInitialize(classname, .queue, .chunks, .nchunks))
+		Set start = ""
+		For i=1:1:nchunks+1 {
+			Set end = $select(i>nchunks:"", 1:$list(chunks,i))
+			Set sc = queue.Queue("##class(dc.Disguise.Strategy).FakeChunks", classname, propName, type, start, end)
+			Set start = end
+		}
+		Set sc = queue.WaitForComplete()
+		$$$ThrowOnError(sc)
+  } Catch ex {
+    Set sc=ex.AsStatus()
+  }
+  Return sc
+}
+
+ClassMethod FakeChunks(classname As %String, propName As %String, type As %String = "", start As %String = "", end As %String = "") As %Status
+{
+  Set sc = $$$OK
+  Try {
+    If (type="") Set type = "integer"
+    If ($ListFind(..#FakeTypes, $ZConvert(type,"l")) = 0) {
+      Return $$$ERROR(5002,"Fake type not found")
+    }
+    $$$THROWONERROR(sc, ##class(dc.Disguise.Core).GetAllData(classname, .results, start, end))
+    $$$THROWONERROR(sc, ##class(dc.Disguise.Core).ProcessFake(classname, propName, type, .results))
   } Catch ex {
     Set sc=ex.AsStatus()
   }
