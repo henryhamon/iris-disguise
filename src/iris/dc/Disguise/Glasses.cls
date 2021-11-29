@@ -21,24 +21,23 @@ ClassMethod ScanProperties(Output props As %ListOfDataTypes = "") As %Status
     Try {
       Set props = ##class(%ListOfDataTypes).%New()
       Set klassname = $CLASSNAME($This)
-      &sql(DECLARE C1 CURSOR FOR
-        SELECT ID
-        INTO :name
-        From %Dictionary.PropertyDefinition
-        where Parent = :klassname
-        AND Type %StartsWith 'dc.Disguise.DataTypes.')
-      &sql(Open C1)
-        QUIT:(SQLCODE'=0)
-      &sql(Fetch C1)
-      While (SQLCODE = 0) {
-        Do props.Insert(name)
-        &sql(Fetch C1)
+      Set rs = ..SearchPropertiesFunc(klassname)
+      While rs.%Next() {
+        Do props.Insert(rs.ID)
       }
-      &sql(Close C1)
     } Catch ex {
       Set sc=ex.AsStatus()
     }
   Return sc
+}
+
+/// Scan properties from disguise dataType
+Query SearchProperties(classname As %String) As %SQLQuery(SELECTMODE = "ODBC") [ SqlProc ]
+{
+  SELECT ID
+  From %Dictionary.PropertyDefinition
+  where Parent = :classname
+  AND Type %StartsWith 'dc.Disguise.DataTypes.'
 }
 
 ClassMethod DisguiseStrategyProcess(props As %ListOfDataTypes) As %Status [ Private ]
@@ -104,8 +103,6 @@ ClassMethod DisguiseStringType(prop As %Dictionary.PropertyDefinition) As %Statu
     Set strategy = prop.Parameters.GetAt("FieldStrategy")
     If (strategy = "DESTRUCTION") {
       Set mask = prop.Parameters.GetAt("Mask")
-      W !,$CLASSNAME($This)
-      W !, prop.Name
       $$$ThrowOnError(##class(Strategy).Destruction($Classname($This), prop.Name, mask))
     }
     If (strategy = "SCRAMBLE") {
@@ -124,6 +121,7 @@ ClassMethod FakeString(prop As %Dictionary.PropertyDefinition) As %Status [ Priv
 {
   Set sc = $$$OK
   Try {
+    $$$ThrowOnError(##class(Strategy).Fake($Classname($This), prop.Name, prop.Parameters.GetAt("FieldStrategy")))
   } Catch ex {
     Set sc=ex.AsStatus()
   }
