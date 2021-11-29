@@ -16,7 +16,7 @@ Method TestProcess()
   kill band
   Do $$$AssertStatusOK(##class(dc.PackageSample.Band).DisguiseProcess())
   Set band = ##class(dc.PackageSample.Band).IdxNameOpen("Led Zeppelin")
-  Do $$$AssertNotEquals(band.Manager, "Peter Grant", "CONFIDENTIAL")
+  Do $$$AssertEquals(band.Manager, "CONFIDENTIAL")
 }
 
 ClassMethod BandsCreate()

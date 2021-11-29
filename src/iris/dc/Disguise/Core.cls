@@ -151,6 +151,9 @@ ClassMethod ProcessDestruction(classname As %String, propName As %String, mask A
     If ('values.%Next()) {
       Return sc
     }
+    If (mask = "") {
+      Set mask = "CONFIDENTIAL"
+    }
     Set obj = $Classmethod(classname, "%OpenId", values.ID)
     If ('$IsObject(obj)) {
       $$$THROWONERROR(sc, ..ProcessDestruction(classname, propName, mask, .values))
