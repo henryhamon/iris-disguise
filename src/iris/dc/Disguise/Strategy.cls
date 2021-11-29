@@ -154,7 +154,7 @@ ClassMethod PartialMaskingChunks(classname As %String, propName As %String, pref
 
 /// Fake
 /// Generate fake data
-ClassMethod Fake(classname As %String, propName As %String, type As %String = "", from As %String = "", to As %String = "") As %Status
+ClassMethod Fake(classname As %String, propName As %String, type As %String = "") As %Status
 {
   Set sc = $$$OK
   Try {
