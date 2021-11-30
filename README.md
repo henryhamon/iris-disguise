@@ -56,6 +56,82 @@ Set ^UnitTestRoot = "/irisrun/repo/src/iris/dc/Test/Disguise/"
 Do ##class(%UnitTest.Manager).RunTest("","/loadudl")
 ```
 
+## How to Use
+
+### Destruction
+
+This strategy will replace a entire column with a word ('CONFIDENTIAL' is the default).
+
+```
+Do ##class(dc.Disguise.Strategy).Destruction("classname", "propertyname", "Word to replace")
+```
+
+The third parameter is optional. If not provided, the word 'CONFIDENTIAL' will be used.
+
+### Scramble
+
+This strategy will scrambling all characters in a property.
+
+```
+Do ##class(dc.Disguise.Strategy).Scramble("classname", "propertyname")
+```
+
+### Shuffling
+
+Shuffling will rearrange all values in a given property. Is not a masking strategy because it works "verticaly".
+This strategy is useful for relatinship because referential integrity will be kept.
+Until this version, this method only works on **one-to-many relationships**.
+
+```
+Do ##class(dc.Disguise.Strategy).Shuffling("classname", "propertyname")
+```
+
+### Partial Masking
+
+This strategy will obfuscate the part of data, a credit card number for example, can be replaced by 456X XXXX XXXX X783
+
+```
+Do ##class(dc.Disguise.Strategy).PartialMasking("classname", "propertyname", prefixLength, suffixLength, "mask")
+```
+
+PrefixLength, suffixLength and mask are optional. If not provided, the default values will be used.
+
+### Randomization
+
+This strategy will generate purely random data. There are three types of randomization: integer, numeric and date.
+
+```
+Do ##class(dc.Disguise.Strategy).Randomization("classname", "propertyname", "type", from, to)
+```
+
+**type**: "integer", "numeric" or "date". "integer" is the default.
+
+from and to are optional. Is to define the range of randomization.
+For integer type the default range is 1 to 100. For numeric type the default range is 1.00 to 100.00.
+
+### Fake Data
+
+The idea of Faking is to replace data with random but plausible values.
+**iris-Disguise** provides a small set of methods to generate fake data.
+
+```
+Do ##class(dc.Disguise.Strategy).Fake("classname", "propertyname", "type")
+```
+
+**type**: "firstname", "lastname", "fullname", "company", "country", "city" and "email"
+
+### Wearing the disguise Glasses
+
+Another way to use **iris-Disguise** is _wearing the disguise glasses_. In a persistent class, you can extent the **dc.Disguise.Glasses** class and change any property with the data type with the strategy of your choice.
+After that just call the .DisguiseProcess() method on the class. All the values will be replaced using the strategy of the data type.
+
+ Data types:
+ * PartialMaskString
+ * RandomInteger
+ * RandomNumeric
+ * FakeString: FieldStrategy parameters: "FIRSTNAME", "LASTNAME", "FULLNAME", "COMPANY", "COUNTRY", "CITY" AND "EMAIL"
+ * String: FieldStrategy parameters: "DESTRUCTION","SCRAMBLE" AND "SHUFFLING"
+
 ## Credits
 Icon by Flaticon from [www.flaticon.com](https://www.flaticon.com/authors/smashicons)
 
