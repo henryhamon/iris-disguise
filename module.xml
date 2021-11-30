@@ -3,7 +3,7 @@
   <Document name="iris-disguise.ZPM">
     <Module>
       <Name>iris-disguise</Name>
-      <Version>1.0.0</Version>
+      <Version>1.0.1</Version>
       <Packaging>module</Packaging>
       <SourcesRoot>src/iris</SourcesRoot>
       <Resource Name="dc.Disguise.PKG"/>
