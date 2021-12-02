@@ -8,5 +8,6 @@ set sc = ##class(App.Installer).setup()
 
 
 zn "IRISAPP"
+do $system.OBJ.LoadDir("/opt/irisbuild/src/iris/dc/PackageSample", "ck")
 zpm "load /opt/irisbuild/ -v":1:1
 halt
