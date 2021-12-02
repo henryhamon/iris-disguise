@@ -52,7 +52,7 @@ docker-compose exec iris iris session iris -U IRISAPP
 ```
 
 ```
-Set ^UnitTestRoot = "/irisrun/repo/src/iris/dc/Test/Disguise/"
+set ^UnitTestRoot = "/opt/irisbuild/src/iris/dc/Test/Disguise/"
 Do ##class(%UnitTest.Manager).RunTest("","/loadudl")
 ```
 
