@@ -4,8 +4,6 @@
 
 > **iris-Disguise** is a tool for Data Anonymization on IterSystems IRIS.
 
-[![demonstration](https://img.youtube.com/vi/Ofyf0IdakeY/0.jpg)](https://www.youtube.com/watch?v=Ofyf0IdakeY)
-
 **iris-Disguise** helps you to build anonymized production data dumps which you can use for performance testing, security testing, debugging and development.
 
 ![disguise](https://media.giphy.com/media/3oEjHPuFDT0CpthWCY/giphy.gif)
@@ -19,6 +17,12 @@
 * **Partial Masking** _leaves out some part of the data_
 * **Scramble** _Given "ABCDEFG", return something like "GEFBDCA"_
 * **Shuffling** _mixes values within the same columns_
+
+## Video demonstration
+
+[![demonstration](https://img.youtube.com/vi/Ofyf0IdakeY/0.jpg)](https://www.youtube.com/watch?v=Ofyf0IdakeY)
+
+
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
