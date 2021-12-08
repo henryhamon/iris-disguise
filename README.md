@@ -2,9 +2,9 @@
 
 # ![Iris Disguise](assets/fake.png?raw=true) iris-disguise
 
-> **iris-Disguise** is a tool for Data Anonymization on IterSystems IRIS.
+> **iris-Disguise** is a tool for Data Anonymization on InterSystems IRIS.
 
-**iris-Disguise** helps you to build anonymized production data dumps which you can use for performance testing, security testing, debugging and development.
+**iris-Disguise** helps you to build anonymized production data dumps which you can use for performance testing, security testing, debugging, and development.
 
 ![disguise](https://media.giphy.com/media/3oEjHPuFDT0CpthWCY/giphy.gif)
 
@@ -84,8 +84,8 @@ Do ##class(dc.Disguise.Strategy).Scramble("classname", "propertyname")
 
 ### Shuffling
 
-Shuffling will rearrange all values in a given property. Is not a masking strategy because it works "verticaly".
-This strategy is useful for relatinship because referential integrity will be kept.
+Shuffling will rearrange all values in a given property. Is not a masking strategy because it works "vertically".
+This strategy is useful for relationships because referential integrity will be kept. 
 Until this version, this method only works on **one-to-many relationships**.
 
 ```
@@ -128,8 +128,8 @@ Do ##class(dc.Disguise.Strategy).Fake("classname", "propertyname", "type")
 
 ### Wearing the disguise Glasses
 
-Another way to use **iris-Disguise** is _wearing the disguise glasses_. In a persistent class, you can extent the **dc.Disguise.Glasses** class and change any property with the data type with the strategy of your choice.
-After that just call the .DisguiseProcess() method on the class. All the values will be replaced using the strategy of the data type.
+Another way to use **iris-Disguise** is _wearing the disguise glasses_. In a persistent class, you can extend the **dc.Disguise.Glasses** class and change any property with the data type with the strategy of your choice.
+After that just call **DisguiseProcess** method in your class. All the values will be replaced using the strategy of the data type.
 
  Data types:
  * PartialMaskString
